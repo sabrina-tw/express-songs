@@ -71,6 +71,13 @@ app.put("/songs/:id", (req, res) => {
   res.status(200).json(song);
 });
 
+app.delete("/songs/:id", (req, res) => {
+  let song = songs.find((song) => song.id === parseInt(req.params.id));
+  let index = songs.indexOf(song);
+  songs.splice(index, 1);
+  res.status(200).json(song);
+});
+
 app.listen(PORT, () => {
   console.log(`express app started on port ${PORT}`);
 });
