@@ -64,6 +64,13 @@ app.get("/songs/:id", (req, res) => {
   res.status(200).json(song);
 });
 
+app.put("/songs/:id", (req, res) => {
+  let song = songs.find((song) => song.id === parseInt(req.params.id));
+  song.name = req.body.name;
+  song.artist = req.body.artist;
+  res.status(200).json(song);
+});
+
 app.listen(PORT, () => {
   console.log(`express app started on port ${PORT}`);
 });
