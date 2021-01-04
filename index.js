@@ -1,13 +1,16 @@
 const express = require("express");
 const app = express();
 const PORT = 3002;
+app.use(express.json());
 
 const songs = [
   {
+    id: 1,
     name: "Song 1",
     artist: "Artist 1",
   },
   {
+    id: 2,
     name: "Song 2",
     artist: "Artist 2",
   },
@@ -22,7 +25,6 @@ app.use((req, res, next) => {
 });
 
 const checkColor = () => {
-  console.log("in checkColor");
   return (req, res, next) => {
     if (req.query.color) {
       res.send("I have color");
@@ -43,8 +45,14 @@ const requireJsonContent = (req, res, next) => {
 };
 
 // ROUTES
-app.post("/songs", requireJsonContent, (req, res, next) => {
-  res.send("thanks for the json!");
+app.post("/songs", requireJsonContent, (req, res) => {
+  let newSong = {
+    id: songs.length + 1,
+    name: req.body.name,
+    artist: req.body.artist,
+  };
+  songs.push(newSong);
+  res.status(201).json(newSong);
 });
 
 app.get("/songs", (req, res) => {
