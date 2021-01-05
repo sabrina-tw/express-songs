@@ -15,11 +15,11 @@ const songs = [
   },
 ];
 
-// const songs = [];
+const movies = [];
 
 // MIDDLEWARE
 app.use((req, res, next) => {
-  console.log("common middleware function was called!");
+  // console.log("common middleware function was called!");
   next();
 });
 
@@ -44,6 +44,8 @@ const requireJsonContent = (req, res, next) => {
 };
 
 // ROUTES
+
+// --------- SONGS ----------
 app.post("/songs", requireJsonContent, (req, res) => {
   let newSong = {
     id: songs.length + 1,
@@ -78,6 +80,38 @@ app.delete("/songs/:id", (req, res) => {
   let index = songs.indexOf(req.song);
   songs.splice(index, 1);
   res.status(200).json(req.song);
+});
+
+// --------- MOVIES ----------
+app.post("/movies", (req, res) => {
+  let newMovie = {
+    id: movies.length + 1,
+    movieName: req.body.movieName,
+  };
+  movies.push(newMovie);
+  res.status(201).json(newMovie);
+});
+
+app.get("/movies", (req, res) => {
+  res.status(200).json(movies);
+});
+
+app.get("/movies/:id", (req, res) => {
+  let movie = movies.find((movie) => movie.id === parseInt(req.params.id));
+  res.status(200).json(movie);
+});
+
+app.put("/movies/:id", (req, res) => {
+  let movie = movies.find((movie) => movie.id === parseInt(req.params.id));
+  movie.movieName = req.body.movieName;
+  res.status(200).json(movie);
+});
+
+app.delete("/movies/:id", (req, res) => {
+  let movie = movies.find((movie) => movie.id === parseInt(req.params.id));
+  let index = movies.indexOf(movie);
+  movies.splice(index, 1);
+  res.status(200).json(movie);
 });
 
 module.exports = app;
