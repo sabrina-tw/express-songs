@@ -59,23 +59,26 @@ app.get("/songs", (req, res) => {
   res.status(200).json(songs);
 });
 
+app.param("id", (req, res, next, id) => {
+  let song = songs.find((song) => song.id === parseInt(id));
+  req.song = song;
+  next();
+});
+
 app.get("/songs/:id", (req, res) => {
-  let song = songs.find((song) => song.id === parseInt(req.params.id));
-  res.status(200).json(song);
+  res.status(200).json(req.song);
 });
 
 app.put("/songs/:id", (req, res) => {
-  let song = songs.find((song) => song.id === parseInt(req.params.id));
-  song.name = req.body.name;
-  song.artist = req.body.artist;
-  res.status(200).json(song);
+  req.song.name = req.body.name;
+  req.song.artist = req.body.artist;
+  res.status(200).json(req.song);
 });
 
 app.delete("/songs/:id", (req, res) => {
-  let song = songs.find((song) => song.id === parseInt(req.params.id));
-  let index = songs.indexOf(song);
+  let index = songs.indexOf(req.song);
   songs.splice(index, 1);
-  res.status(200).json(song);
+  res.status(200).json(req.song);
 });
 
 app.listen(PORT, () => {
