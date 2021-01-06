@@ -15,6 +15,14 @@ describe("songs", () => {
       expect(response.status).toEqual(201);
       expect(response.body).toEqual(expectedSong);
     });
+
+    it("should throw error if fields are invalid", async () => {
+      const newSong = { name: "", artist: "Nick Drake" };
+
+      const response = await request(app).post("/songs").send(newSong);
+
+      expect(response.status).toEqual(400);
+    });
   });
 
   describe("GET /song/:id", () => {
@@ -42,6 +50,14 @@ describe("songs", () => {
 
       expect(response.status).toEqual(200);
       expect(response.body).toMatchObject(modifiedSong);
+    });
+
+    it("should throw error if fields are invalid", async () => {
+      const modifiedSong = { name: "", artist: "Nick Drake" };
+
+      const response = await request(app).post("/songs").send(modifiedSong);
+
+      expect(response.status).toEqual(400);
     });
   });
 

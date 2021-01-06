@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const requireJsonContent = require("../middleware/requireJsonContent");
+const Joi = require("@hapi/joi");
+const e = require("express");
 
 const songs = [
   {
@@ -15,14 +17,33 @@ const songs = [
   },
 ];
 
-router.post("/", requireJsonContent, (req, res) => {
+const validateSong = (song) => {
+  const schema = Joi.object({
+    id: Joi.number().integer(),
+    name: Joi.string().min(1).required(),
+    artist: Joi.string().min(1).required(),
+  });
+
+  return schema.validate(song);
+};
+
+router.post("/", requireJsonContent, (req, res, next) => {
   let newSong = {
     id: songs.length + 1,
     name: req.body.name,
     artist: req.body.artist,
   };
-  songs.push(newSong);
-  res.status(201).json(newSong);
+
+  const validation = validateSong(newSong);
+
+  if (validation.error) {
+    const error = new Error(validation.error.details[0].message);
+    error.statusCode = 400;
+    next(error);
+  } else {
+    songs.push(newSong);
+    res.status(201).json(newSong);
+  }
 });
 
 router.get("/", (req, res) => {
@@ -39,10 +60,19 @@ router.get("/:id", (req, res) => {
   res.status(200).json(req.song);
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", (req, res, next) => {
   req.song.name = req.body.name;
   req.song.artist = req.body.artist;
-  res.status(200).json(req.song);
+
+  const validation = validateSong(req.song);
+
+  if (validation.error) {
+    const error = new Error(validation.error.details[0].message);
+    error.statusCode = 400;
+    next(error);
+  } else {
+    res.status(200).json(req.song);
+  }
 });
 
 router.delete("/:id", (req, res) => {
