@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const requireJsonContent = require("../middleware/requireJsonContent");
 
 const movies = [];
 
-router.post("/", (req, res) => {
+router.post("/", requireJsonContent, (req, res) => {
   let newMovie = {
     id: movies.length + 1,
     movieName: req.body.movieName,
