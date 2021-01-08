@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const requireJsonContent = require("../middleware/requireJsonContent");
-const Joi = require("@hapi/joi");
-const e = require("express");
+const Joi = require("joi");
 
 const songs = [
   {
