@@ -1,5 +1,6 @@
 const app = require("./app");
-const PORT = 3002;
+const PORT = process.env.PORT || 3002;
+require("./utils/db");
 
 app.listen(PORT, () => {
   console.log(`express app started on port ${PORT}`);

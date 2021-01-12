@@ -22,10 +22,17 @@ app.use(checkColor());
 
 // ROUTES
 
-const songsRouter = require("./routes/songs");
+const songsRouter = require("./routes/songs.route");
 app.use("/songs", songsRouter);
 
-const moviesRouter = require("./routes/movies");
+const moviesRouter = require("./routes/movies.route");
 app.use("/movies", moviesRouter);
+
+// DEFAULT ERROR HANDLER
+
+app.use((err, req, res, next) => {
+  err.statusCode = err.statusCode || 500;
+  res.status(err.statusCode).send(err.message);
+});
 
 module.exports = app;
