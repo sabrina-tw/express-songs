@@ -6,8 +6,8 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
-    "start": "node src/index.js",
-    "start:dev": "nodemon src/index.js",
+    "start": "NODE_ENV=production node src/index.js",
+    "start:dev": "NODE_ENV=development nodemon src/index.js",
     "start:db": "mongod --dbpath ~/data/db"
   },
   "keywords": [],

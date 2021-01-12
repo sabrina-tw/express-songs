@@ -9,8 +9,10 @@ const mongoOptions = {
 
 // will create a new db if does not exist
 const dbName = "songs";
-// const dbUrl = process.env.MONGODB_URI || "mongodb://localhost:27017/" + dbName;
-const dbUrl = "mongodb://localhost:27017/" + dbName;
+const dbUrl =
+  process.env.NODE_ENV === "production"
+    ? process.env.MONGODB_URI
+    : "mongodb://localhost:27017/" + dbName;
 mongoose.connect(dbUrl, mongoOptions);
 const db = mongoose.connection;
 
