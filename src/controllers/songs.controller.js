@@ -1,4 +1,3 @@
-require("../models/song.model");
 const Song = require("../models/song.model");
 
 const createOne = async (song, next) => {
