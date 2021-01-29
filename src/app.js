@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
+const cookieParser = require("cookie-parser");
 app.use(express.json());
+app.use(cookieParser());
 
 // MIDDLEWARE
 app.use((req, res, next) => {
@@ -27,6 +29,9 @@ app.use("/songs", songsRouter);
 
 const moviesRouter = require("./routes/movies.route");
 app.use("/movies", moviesRouter);
+
+const usersRouter = require("./routes/users.route");
+app.use("/users", usersRouter);
 
 // DEFAULT ERROR HANDLER
 
