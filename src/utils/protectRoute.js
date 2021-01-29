@@ -1,5 +1,5 @@
 var jwt = require("jsonwebtoken");
-const getJWTSecret = require("../../config/getJWTSecret");
+const getJWTSecret = require("../config/getJWTSecret");
 
 const protectRoute = (req, res, next) => {
   try {
