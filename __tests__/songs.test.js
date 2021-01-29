@@ -2,6 +2,8 @@ const request = require("supertest");
 const app = require("../src/app");
 const dbHandlers = require("../test/dbHandler");
 const Song = require("../src/models/song.model");
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 
 describe("songs", () => {
   beforeAll(async () => await dbHandlers.connect());
@@ -9,10 +11,12 @@ describe("songs", () => {
   beforeEach(async () => {
     const songsData = [
       {
+        _id: new ObjectId(),
         name: "song 1",
         artist: "artist 1",
       },
       {
+        _id: new ObjectId(),
         name: "song 2",
         artist: "artist 2",
       },
