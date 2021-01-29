@@ -3,6 +3,7 @@ const app = express();
 const cookieParser = require("cookie-parser");
 app.use(express.json());
 app.use(cookieParser());
+require("dotenv").config();
 
 // MIDDLEWARE
 app.use((req, res, next) => {

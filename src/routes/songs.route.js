@@ -1,4 +1,5 @@
 const express = require("express");
+const protectRoute = require("../utils/protectRoute");
 const router = express.Router();
 const requireJsonContent = require("../middleware/requireJsonContent");
 const ctrl = require("../controllers/songs.controller");
@@ -18,12 +19,12 @@ router.get("/:id", async (req, res) => {
   res.status(200).json(song);
 });
 
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", protectRoute, async (req, res, next) => {
   const song = await ctrl.updateById(req.params.id, req.body, next);
   res.status(200).json(song);
 });
 
-router.delete("/:id", async (req, res, next) => {
+router.delete("/:id", protectRoute, async (req, res, next) => {
   const song = await ctrl.deleteById(req.params.id, next);
   res.status(200).json(song);
 });
