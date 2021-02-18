@@ -97,5 +97,24 @@ describe("songs", () => {
     expect(response.status).toEqual(500);
   });
 
-  xit("DELETE /:id should delete correct song successfully given valid id", async () => {});
+  it("DELETE /:id should delete correct song successfully if authorised and given valid id", async () => {
+    const user = new User({ username: "username", password: "password" });
+    await user.save();
+    const token = createJWTToken(user.username);
+
+    const song = await Song.findOne({ name: "song 1" });
+    const response = await request(app)
+      .delete(`/songs/${song.id}`)
+      .set("Cookie", `token=${token}`)
+      .expect(200);
+
+    expect(response.body.name).toEqual("song 1");
+  });
+
+  it("DELETE /:id should throw error if authorised", async () => {
+    const song = await Song.findOne({ name: "song 1" });
+    const response = await request(app).delete(`/songs/${song.id}`);
+
+    expect(response.status).toBe(401);
+  });
 });

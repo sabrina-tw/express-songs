@@ -42,7 +42,7 @@ const updateById = async (id, body, next) => {
 
 const deleteById = async (id, next) => {
   try {
-    const song = await Song.deleteOne({ id: id });
+    const song = await Song.findOneAndDelete({ _id: id });
     return song;
   } catch (err) {
     next(err);
