@@ -14,8 +14,8 @@ router.get("/", async (req, res, next) => {
   res.status(200).json(songs);
 });
 
-router.get("/:id", async (req, res) => {
-  const song = await ctrl.findById(req.params.id);
+router.get("/:id", async (req, res, next) => {
+  const song = await ctrl.findById(req.params.id, next);
   res.status(200).json(song);
 });
 

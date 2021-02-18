@@ -42,7 +42,12 @@ describe("songs", () => {
     expect(response.body).toMatchObject(expectedSongsData);
   });
 
-  xit("GET /:id should respond with correct song given valid id", async () => {});
+  it("GET /:id should respond with correct song given valid id", async () => {
+    const song = await Song.findOne({ name: "song 1" });
+
+    const response = await request(app).get(`/songs/${song.id}`).expect(200);
+    expect(response.body.name).toEqual("song 1");
+  });
 
   xit("PUT /:id should modify correct song successfully given valid id", async () => {});
 
