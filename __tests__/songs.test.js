@@ -111,7 +111,7 @@ describe("songs", () => {
     expect(response.body.name).toEqual("song 1");
   });
 
-  it("DELETE /:id should throw error if authorised", async () => {
+  it("DELETE /:id should throw error if unauthorised", async () => {
     const song = await Song.findOne({ name: "song 1" });
     const response = await request(app).delete(`/songs/${song.id}`);
 
