@@ -7,7 +7,15 @@ const User = require("../src/models/user.model");
 const createJWTToken = require("../src/config/jwt");
 
 describe("songs", () => {
-  beforeAll(async () => await dbHandlers.connect());
+  let token;
+
+  beforeAll(async () => {
+    await dbHandlers.connect();
+
+    const user = new User({ username: "username", password: "password" });
+    await user.save();
+    token = createJWTToken(user.username);
+  });
 
   beforeEach(async () => {
     const songsData = [
@@ -49,10 +57,6 @@ describe("songs", () => {
   });
 
   it("PUT /:id should modify correct song successfully if authorised and given valid id", async () => {
-    const user = new User({ username: "username", password: "password" });
-    await user.save();
-    const token = createJWTToken(user.username);
-
     const song = await Song.findOne({ name: "song 1" });
     const response = await request(app)
       .put(`/songs/${song.id}`)
@@ -98,10 +102,6 @@ describe("songs", () => {
   });
 
   it("DELETE /:id should delete correct song successfully if authorised and given valid id", async () => {
-    const user = new User({ username: "username", password: "password" });
-    await user.save();
-    const token = createJWTToken(user.username);
-
     const song = await Song.findOne({ name: "song 1" });
     const response = await request(app)
       .delete(`/songs/${song.id}`)
