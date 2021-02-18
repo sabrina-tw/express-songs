@@ -3,7 +3,8 @@ const app = require("../src/app");
 const dbHandlers = require("../test/dbHandler");
 const Song = require("../src/models/song.model");
 const mongoose = require("mongoose");
-const ObjectId = mongoose.Types.ObjectId;
+const User = require("../src/models/user.model");
+const createJWTToken = require("../src/config/jwt");
 
 describe("songs", () => {
   beforeAll(async () => await dbHandlers.connect());
@@ -11,12 +12,10 @@ describe("songs", () => {
   beforeEach(async () => {
     const songsData = [
       {
-        _id: new ObjectId(),
         name: "song 1",
         artist: "artist 1",
       },
       {
-        _id: new ObjectId(),
         name: "song 2",
         artist: "artist 2",
       },
@@ -49,7 +48,29 @@ describe("songs", () => {
     expect(response.body.name).toEqual("song 1");
   });
 
-  xit("PUT /:id should modify correct song successfully given valid id", async () => {});
+  it("PUT /:id should modify correct song successfully if authorised and given valid id", async () => {
+    const user = new User({ username: "username", password: "password" });
+    await user.save();
+    const token = createJWTToken(user.username);
+
+    const song = await Song.findOne({ name: "song 1" });
+    const response = await request(app)
+      .put(`/songs/${song.id}`)
+      .send({ name: "song 1 edited" })
+      .set("Cookie", `token=${token}`)
+      .expect(200);
+
+    expect(response.body.name).toEqual("song 1 edited");
+  });
+
+  it("PUT /:id should throw error if unauthorised", async () => {
+    const song = await Song.findOne({ name: "song 1" });
+    const response = await request(app)
+      .put(`/songs/${song.id}`)
+      .send({ name: "song 1 edited" });
+
+    expect(response.status).toBe(401);
+  });
 
   it("POST should create new song if model is valid", async () => {
     const newSong = {
