@@ -2,12 +2,21 @@ const request = require("supertest");
 const app = require("../src/app");
 const dbHandlers = require("../test/dbHandler");
 const Song = require("../src/models/song.model");
-const mongoose = require("mongoose");
 const User = require("../src/models/user.model");
 const createJWTToken = require("../src/config/jwt");
 
 describe("songs", () => {
   let token;
+  const songsData = [
+    {
+      name: "song 1",
+      artist: "artist 1",
+    },
+    {
+      name: "song 2",
+      artist: "artist 2",
+    },
+  ];
 
   beforeAll(async () => {
     await dbHandlers.connect();
@@ -18,35 +27,14 @@ describe("songs", () => {
   });
 
   beforeEach(async () => {
-    const songsData = [
-      {
-        name: "song 1",
-        artist: "artist 1",
-      },
-      {
-        name: "song 2",
-        artist: "artist 2",
-      },
-    ];
     await Song.create(songsData);
   });
   afterEach(async () => await dbHandlers.clearDatabase());
   afterAll(async () => await dbHandlers.closeDatabase());
 
   it("GET should respond with all songs", async () => {
-    const expectedSongsData = [
-      {
-        name: "song 1",
-        artist: "artist 1",
-      },
-      {
-        name: "song 2",
-        artist: "artist 2",
-      },
-    ];
-
     const response = await request(app).get("/songs").expect(200);
-    expect(response.body).toMatchObject(expectedSongsData);
+    expect(response.body).toMatchObject(songsData);
   });
 
   it("GET /:id should respond with correct song given valid id", async () => {
