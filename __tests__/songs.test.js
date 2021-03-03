@@ -2,11 +2,10 @@ const request = require("supertest");
 const app = require("../src/app");
 const dbHandlers = require("../test/dbHandler");
 const Song = require("../src/models/song.model");
-const User = require("../src/models/user.model");
 const createJWTToken = require("../src/config/jwt");
 
 describe("songs", () => {
-  let token;
+  let token = createJWTToken("username");
   const songsData = [
     {
       name: "song 1",
@@ -20,10 +19,6 @@ describe("songs", () => {
 
   beforeAll(async () => {
     await dbHandlers.connect();
-
-    const user = new User({ username: "username", password: "password" });
-    await user.save();
-    token = createJWTToken(user.username);
   });
 
   beforeEach(async () => {
